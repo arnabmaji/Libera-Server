@@ -1,9 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const config = require('config');
 
 const auth = require('./routes/auth');
 
 const app = express();
+
+if (!config.get('jwtPrivateKey')) {
+    console.log('FATAL ERROR: jwtPrivateKey not defined.')
+    process.exit(1);
+}
 
 // middleware
 app.use(bodyParser.urlencoded({ extended: true }));
