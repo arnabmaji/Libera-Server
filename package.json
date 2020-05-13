@@ -1,0 +1,13 @@
+{
+  "name": "io.github.arnabmaji19.libera.server",
+  "version": "1.0.0",
+  "description": "Server for Libera",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server"
+  },
+  "keywords": [],
+  "author": "Arnab Maji",
+  "license": "MIT"
+}
