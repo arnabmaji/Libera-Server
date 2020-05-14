@@ -16,15 +16,20 @@ function validateBooksParams(book) {
         title: Joi.string().min(4).max(255).required(),
         author_id: Joi.number().min(1).required(),
         publisher_id: Joi.number().min(1).required(),
-        edition: Joi.number().min(1).required(),
         year_published: Joi.number().min(1900).max(2050).required()
     };
 
     return Joi.validate(book, schema);
 }
 
+async function searchBooks(keyword) {
+    return await database.query('SELECT * FROM book_details WHERE title REGEXP ? ',
+        keyword);
+}
+
 module.exports = {
     validateBooksParams,
     addNewBook,
-    deleteBookById
+    deleteBookById,
+    searchBooks
 };
