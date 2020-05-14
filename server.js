@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const config = require('config');
 
 const auth = require('./routes/auth');
+const books = require('./routes/books');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 
 // route for handling authentication
 app.use('/api/auth', auth);
-
+// route for handling all requests related to books
+app.use('/api/books', books);
 
 app.listen(process.env.PORT, () => console.log(`Listening on Port ${process.env.PORT}...`));
