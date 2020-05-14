@@ -6,6 +6,11 @@ async function addNewBook(book) {
     return res.affectedRows;
 }
 
+async function deleteBookById(id) {
+    const res = await database.query('DELETE FROM books where book_id = ?', id);
+    return res.affectedRows;
+}
+
 function validateBooksParams(book) {
     const schema = {
         title: Joi.string().min(4).max(255).required(),
@@ -20,5 +25,6 @@ function validateBooksParams(book) {
 
 module.exports = {
     validateBooksParams,
-    addNewBook
+    addNewBook,
+    deleteBookById
 };
