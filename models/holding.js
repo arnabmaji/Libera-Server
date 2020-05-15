@@ -15,6 +15,17 @@ async function addNewHoldings(book, items) {
     return holdingNumbers;
 }
 
+async function removeHolding(holdingNumber) {
+    /*
+    * Remove existing holding by its numbers
+    * And return number of affected rows
+     */
+
+    const result = await database.query('DELETE FROM holdings WHERE holding_number = ?', holdingNumber);
+    return result.affectedRows;
+}
+
 module.exports = {
-    addNewHoldings
+    addNewHoldings,
+    removeHolding
 };

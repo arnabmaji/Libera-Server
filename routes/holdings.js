@@ -2,7 +2,7 @@ const express = require('express');
 const Joi = require('joi');
 const _ = require('lodash');
 const auth = require('../middleware/auth');
-const  { addNewHoldings } = require('../models/holding');
+const  { addNewHoldings, removeHolding } = require('../models/holding');
 
 const router = express.Router();
 
@@ -20,6 +20,14 @@ router.post('/', auth, async (req, res) => {
     const holdingNumbers = await addNewHoldings(_.pick(req.body, 'book_id'), req.body.items);
 
     res.status(200).send({ holdingNumbers: holdingNumbers });  // return the newly generated holding  number
+});
+
+router.delete('/:holdingNumber', auth, async (req, res) => {
+
+    let affectedRows = await removeHolding(req.params.holdingNumber);
+    if (affectedRows === 1) return res.sendStatus(200);
+    res.sendStatus(400);
+
 });
 
 module.exports = router;
