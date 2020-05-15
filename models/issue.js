@@ -1,0 +1,55 @@
+const Joi = require('joi');
+const database = require('./db');
+
+function validateIssueParams(issue) {
+    const schema = {
+        user_id: Joi.number().min(1).required(),
+        holding_numbers: Joi.array().items(Joi.number()).min(1).required()
+    }
+
+    return Joi.validate(issue, schema);
+}
+
+async function makeIssues(issue) {
+    // start the transaction
+    await database.query('START TRANSACTION');
+    try {
+        let issueId = await createNewIssue(issue.user_id);
+        // add all holdings for current issue
+        for (const holdingNumber of issue.holding_numbers) {
+            const alreadyIssued = await isAlreadyIssued(holdingNumber);
+            if (alreadyIssued) throw new Error(`Holding ${holdingNumber} already issued!`);
+            await database.query('INSERT INTO issue_details SET ?', {
+                issue_id: issueId,
+                holding_number: holdingNumber
+            });
+        }
+        await database.query('COMMIT');  // commit the changes
+        return 'Successful';
+    } catch (e) {
+        // in case of error roll back all changes
+        await database.query('ROLLBACK');
+        return e.message;
+    }
+}
+
+async function createNewIssue(userId) {
+    /*
+    * Insert new row in issues table and return its id
+     */
+    const result = await database.query('INSERT INTO issues (user_id, issued_date, due_date)' +
+        ' VALUES (?, CURRENT_DATE(), DATE_ADD(CURRENT_DATE(), INTERVAL 30 DAY))', [userId]);
+    if (!(result.affectedRows === 1)) throw new Error('Something went wrong');
+    return result.insertId;
+}
+
+async function isAlreadyIssued(holdingNumber) {
+    const result = await database.query('SELECT COUNT(*) AS count FROM issue_details ' +
+        'WHERE holding_number = ? AND submission_date IS NULL', holdingNumber);
+    return (result[0].count === 1);
+}
+
+module.exports = {
+    validateIssueParams,
+    makeIssues
+};
