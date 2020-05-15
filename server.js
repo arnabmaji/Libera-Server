@@ -5,6 +5,7 @@ const config = require('config');
 const auth = require('./routes/auth');
 const books = require('./routes/books');
 const holdings = require('./routes/holdings');
+const users = require('./routes/users');
 
 const app = express();
 
@@ -24,9 +25,14 @@ app.get('/', (req, res) => {
 
 // route for handling authentication
 app.use('/api/auth', auth);
+
 // route for handling all requests related to books
 app.use('/api/books', books);
+
 // route for handling all request related to holdings
 app.use('/api/holdings', holdings);
+
+// route for handling all requests related to users
+app.use('/api/users', users);
 
 app.listen(process.env.PORT, () => console.log(`Listening on Port ${process.env.PORT}...`));
