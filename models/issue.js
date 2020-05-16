@@ -70,8 +70,24 @@ async function returnHolding(holdingNumber) {
     return false;
 }
 
+async function getAllIssuedHoldings() {
+    /*
+    * Fetch all issued holdings from the database
+     */
+    let holdingNumbers = [];
+    const result = await database.query('SELECT holding_number ' +
+        'FROM issue_details ' +
+        'WHERE submission_date IS NULL');
+
+    for (const holding of result) {
+        holdingNumbers.push(holding.holding_number);
+    }
+    return holdingNumbers;
+}
+
 module.exports = {
     validateIssueParams,
     makeIssues,
-    returnHolding
+    returnHolding,
+    getAllIssuedHoldings
 };
