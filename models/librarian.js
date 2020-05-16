@@ -39,9 +39,17 @@ async function deleteLibrarianById(id) {
     return result.affectedRows === 1;
 }
 
+async function getAllLibrarians() {
+    /*
+    * Fetch all librarians
+     */
+    return await database.query('SELECT first_name, last_name, email, phone, address FROM librarians');
+}
+
 module.exports = {
     getLibrarianByEmail,
     validateLibrarianParams,
     createNewLibrarian,
-    deleteLibrarianById
+    deleteLibrarianById,
+    getAllLibrarians
 };

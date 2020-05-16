@@ -7,7 +7,8 @@ const {
     getLibrarianByEmail,
     validateLibrarianParams,
     createNewLibrarian,
-    deleteLibrarianById} = require('../models/librarian')
+    deleteLibrarianById,
+    getAllLibrarians} = require('../models/librarian')
 
 const router = express.Router();
 
@@ -34,6 +35,11 @@ router.post('/', [auth, admin], async (req, res) => {
 router.delete('/:id', [auth, admin], async (req,res) => {
     if (await deleteLibrarianById(req.params.id)) return res.sendStatus(200);
     res.sendStatus(400);
+});
+
+// add route for fetching all librarians
+router.get('/', [auth, admin], async (req, res) => {
+    res.status(200).send(await getAllLibrarians());
 });
 
 module.exports = router;
