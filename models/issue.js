@@ -11,9 +11,17 @@ function validateIssueParams(issue) {
 }
 
 async function makeIssues(issue) {
+    /*
+    * Make issue for holdings to user
+    * First create issue for user,
+    * Then, for each holding add new rows in issue_details by issue_id
+    * Perform all of the above operations in transaction
+     */
+
     // start the transaction
     await database.query('START TRANSACTION');
     try {
+        // create new issue for user
         let issueId = await createNewIssue(issue.user_id);
         // add all holdings for current issue
         for (const holdingNumber of issue.holding_numbers) {
@@ -49,7 +57,21 @@ async function isAlreadyIssued(holdingNumber) {
     return (result[0].count === 1);
 }
 
+async function returnHolding(holdingNumber) {
+    /*
+    * Make a return of previously issued holding
+     */
+    if (await isAlreadyIssued(holdingNumber)){
+        const result = await database.query('UPDATE issue_details ' +
+            'SET submission_date = CURRENT_DATE() ' +
+            'WHERE holding_number = ? AND submission_date IS NULL', holdingNumber);
+        if (result.affectedRows === 1) return true;
+    }
+    return false;
+}
+
 module.exports = {
     validateIssueParams,
-    makeIssues
+    makeIssues,
+    returnHolding
 };

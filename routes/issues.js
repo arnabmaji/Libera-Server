@@ -1,7 +1,7 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const _ = require('lodash');
-const {validateIssueParams, makeIssues} = require('../models/issue');
+const {validateIssueParams, makeIssues, returnHolding} = require('../models/issue');
 
 const router = express.Router();
 
@@ -17,6 +17,12 @@ router.post('/', auth, async (req, res) => {
     if (message === 'Successful') return res.sendStatus(200);
     res.status(500).send(message);
 
+});
+
+// add route for returning issued books
+router.put('/:holdingNumber', auth, async (req, res) => {
+    const result = await returnHolding(req.params.holdingNumber);
+    res.sendStatus(result ? 200: 400);
 });
 
 module.exports = router;
