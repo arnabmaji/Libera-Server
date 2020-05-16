@@ -37,8 +37,16 @@ async function createNewUser(user) {
     return result.affectedRows;
 }
 
+async function getAllUsers() {
+    /*
+    * Fetch all users from database
+     */
+    return await database.query('SELECT first_name, last_name, email, phone, address FROM users');
+}
+
 module.exports = {
     validateUserParams,
     getUserByEmail,
-    createNewUser
+    createNewUser,
+    getAllUsers
 };

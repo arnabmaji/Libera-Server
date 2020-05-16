@@ -1,7 +1,9 @@
 const express = require('express');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const {validateUserParams, getUserByEmail, createNewUser} = require('../models/user');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
+const {validateUserParams, getUserByEmail, createNewUser, getAllUsers} = require('../models/user');
 
 const router = express.Router();
 
@@ -25,6 +27,11 @@ router.post('/', async (req, res) => {
 
     if (affectedRows === 1) return  res.sendStatus(200);
     res.sendStatus(500);
+});
+
+// add route for fetching all users
+router.get('/', [auth, admin], async (req, res) => {
+    res.status(200).send(await getAllUsers());
 });
 
 module.exports = router;
