@@ -24,12 +24,24 @@ function validateLibrarianParams(user) {
 }
 
 async function createNewLibrarian(librarian) {
+    /*
+    * Creates new Librarian with given details
+     */
     const result = await database.query('INSERT INTO librarians SET ?', librarian);
     return result.affectedRows;
+}
+
+async function deleteLibrarianById(id) {
+    /*
+    * Deletes librarian by id
+     */
+    const result = await database.query('DELETE FROM librarians WHERE librarian_id = ?', id);
+    return result.affectedRows === 1;
 }
 
 module.exports = {
     getLibrarianByEmail,
     validateLibrarianParams,
-    createNewLibrarian
+    createNewLibrarian,
+    deleteLibrarianById
 };

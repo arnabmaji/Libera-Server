@@ -3,7 +3,11 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-const {getLibrarianByEmail, validateLibrarianParams, createNewLibrarian} = require('../models/librarian')
+const {
+    getLibrarianByEmail,
+    validateLibrarianParams,
+    createNewLibrarian,
+    deleteLibrarianById} = require('../models/librarian')
 
 const router = express.Router();
 
@@ -24,6 +28,12 @@ router.post('/', [auth, admin], async (req, res) => {
     const affectedRows = await createNewLibrarian(librarian);
     if (affectedRows === 1) return res.sendStatus(200);
     res.sendStatus(500);
+});
+
+// add route for deleting librarian by their id
+router.delete('/:id', [auth, admin], async (req,res) => {
+    if (await deleteLibrarianById(req.params.id)) return res.sendStatus(200);
+    res.sendStatus(400);
 });
 
 module.exports = router;
