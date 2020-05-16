@@ -7,6 +7,7 @@ const books = require('./routes/books');
 const holdings = require('./routes/holdings');
 const users = require('./routes/users');
 const issues = require('./routes/issues');
+const librarians = require('./routes/librarians');
 
 const app = express();
 
@@ -38,5 +39,8 @@ app.use('/api/users', users);
 
 // route for making issue of a book or return
 app.use('/api/issues', issues);
+
+// route for handling all requests related to librarians
+app.use('/api/librarians', librarians);
 
 app.listen(process.env.PORT, () => console.log(`Listening on Port ${process.env.PORT}...`));
