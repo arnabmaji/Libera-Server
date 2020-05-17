@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { getLibrarianByEmail } = require('../models/librarian');
+const { getUserByEmail } = require('../models/user');
 
 const router = express.Router();
 
@@ -29,6 +30,29 @@ router.post('/librarian', async (req, res) => {
         .sendStatus(200);
 
 });
+
+// add route for authenticating users
+router.post('/user', async (req, res) => {
+
+    // validate request body
+    const {error} = validateAuthCredentials(_.pick(req.body, ['email', 'password']));
+    if (error) return res.status(400).send(error.details[0].message);
+
+    // verify authentication details
+    let user = await getUserByEmail(req.body.email);
+    // if user is not found
+    if (!user) return res.status(400).send('Invalid email or password.');
+    // verify password
+    let valid = await bcrypt.compare(req.body.password, user.password);
+    if (!valid) return res.status(400).send('Invalid email or password.');
+
+    // if user is authenticated, send auth token with user information
+    res
+        .header('x-auth-token', generateAuthToken(user))
+        .status(200)
+        .send(_.pick(user, ['first_name', 'last_name', 'email', 'phone', 'address']));
+
+})
 
 function validateAuthCredentials(user) {
     const schema = {
