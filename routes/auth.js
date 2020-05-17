@@ -27,7 +27,8 @@ router.post('/librarian', async (req, res) => {
     // if user is authenticated send auth token
     res
         .header('x-auth-token', generateAuthToken(librarian))
-        .sendStatus(200);
+        .status(200)
+        .send(_.pick(librarian, ['first_name', 'last_name', 'email', 'phone', 'address', 'is_admin']));
 
 });
 
