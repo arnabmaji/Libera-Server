@@ -1,7 +1,7 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const _ = require('lodash');
-const {validateIssueParams, makeIssues, returnHolding, getAllIssuedHoldings} = require('../models/issue');
+const {validateIssueParams, makeIssues, returnHolding, getAllIssuedHoldings, getIssuedBooksByUserId} = require('../models/issue');
 
 const router = express.Router();
 
@@ -22,13 +22,18 @@ router.post('/', auth, async (req, res) => {
 // add route for returning issued books
 router.put('/:holdingNumber', auth, async (req, res) => {
     const result = await returnHolding(req.params.holdingNumber);
-    res.sendStatus(result ? 200: 400);
+    res.sendStatus(result ? 200 : 400);
 });
 
 // add route for fetching all issued holdings
 router.get('/', auth, async (req, res) => {
     const result = await getAllIssuedHoldings();
     res.status(200).send(result);
+});
+
+// fetch issued books for a particular user
+router.get('/:userId', auth, async (req, res) => {
+    res.status(200).send(await getIssuedBooksByUserId(req.params.userId));
 });
 
 module.exports = router;

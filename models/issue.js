@@ -85,9 +85,32 @@ async function getAllIssuedHoldings() {
     return holdingNumbers;
 }
 
+async function getIssuedBooksByUserId(id) {
+    /*
+    * Fetch all issued books for a particular user
+     */
+    return await database.query(
+        'SELECT\n' +
+        'title,\n' +
+        'author,\n' +
+        'publisher,\n' +
+        'year_published,\n' +
+        'COUNT(*) AS quantity\n' +
+        'FROM book_details\n' +
+        'JOIN holdings USING (book_id)\n' +
+        'JOIN issue_details USING (holding_number)\n' +
+        'JOIN issues USING (issue_id)\n' +
+        'WHERE\n' +
+        'user_id = ?\n' +
+        'AND submission_date IS NULL\n' +
+        'GROUP BY title, author, publisher, year_published'
+        , id);
+}
+
 module.exports = {
     validateIssueParams,
     makeIssues,
     returnHolding,
-    getAllIssuedHoldings
+    getAllIssuedHoldings,
+    getIssuedBooksByUserId
 };
