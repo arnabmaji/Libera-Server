@@ -26,7 +26,7 @@ router.post('/librarian', async (req, res) => {
 
     // if user is authenticated send auth token
     res
-        .header('x-auth-token', generateAuthToken(librarian))
+        .header('x-auth-token', generateAuthToken(librarian, 1))
         .status(200)
         .send(_.pick(librarian, ['first_name', 'last_name', 'email', 'phone', 'address', 'is_admin']));
 
@@ -49,7 +49,7 @@ router.post('/user', async (req, res) => {
 
     // if user is authenticated, send auth token with user information
     res
-        .header('x-auth-token', generateAuthToken(user))
+        .header('x-auth-token', generateAuthToken(user, 2))
         .status(200)
         .send(_.pick(user, ['first_name', 'last_name', 'email', 'phone', 'address']));
 
@@ -64,8 +64,10 @@ function validateAuthCredentials(user) {
     return Joi.validate(user, schema);
 }
 
-function generateAuthToken(user) {
-    return jwt.sign(_.pick(user, ['first_name', 'last_name', 'email', 'is_admin']), config.get('jwtPrivateKey'));
+function generateAuthToken(user, privilegeLevel) {
+    let decoded = _.pick(user, ['first_name', 'last_name', 'email', 'is_admin']);
+    decoded.privilege_level = privilegeLevel;
+    return jwt.sign(decoded, config.get('jwtPrivateKey'));
 }
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const auth = require('../middleware/auth');
+const librarianAuth = require('../middleware/librarian-auth');
 const admin = require('../middleware/admin');
 const {validateUserParams, getUserByEmail, createNewUser, getAllUsers} = require('../models/user');
 
@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
 });
 
 // add route for fetching all users
-router.get('/', [auth, admin], async (req, res) => {
+router.get('/', [librarianAuth, admin], async (req, res) => {
     res.status(200).send(await getAllUsers());
 });
 
