@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
+const morgan = require('morgan');
 
 const auth = require('./routes/auth');
 const books = require('./routes/books');
@@ -19,6 +20,7 @@ if (!config.get('jwtPrivateKey')) {
 // middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(morgan('tiny'));
 
 // routes
 app.get('/', (req, res) => {

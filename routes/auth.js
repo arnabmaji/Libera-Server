@@ -28,7 +28,7 @@ router.post('/librarian', async (req, res) => {
     res
         .header('x-auth-token', generateAuthToken(librarian, 1))
         .status(200)
-        .send(_.pick(librarian, ['first_name', 'last_name', 'email', 'phone', 'address', 'is_admin']));
+        .send(_.pick(librarian, ['first_name', 'last_name', 'email', 'phone', 'address']));
 
 });
 
