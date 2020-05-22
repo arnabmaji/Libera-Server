@@ -9,6 +9,7 @@ const holdings = require('./routes/holdings');
 const users = require('./routes/users');
 const issues = require('./routes/issues');
 const librarians = require('./routes/librarians');
+const authors = require('./routes/auhtors');
 
 const app = express();
 
@@ -21,6 +22,7 @@ if (!config.get('jwtPrivateKey')) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(delay);
 
 // routes
 app.get('/', (req, res) => {
@@ -45,4 +47,12 @@ app.use('/api/issues', issues);
 // route for handling all requests related to librarians
 app.use('/api/librarians', librarians);
 
+// route for handling all requests related to authors
+app.use('/api/authors', authors);
+
 app.listen(process.env.PORT, () => console.log(`Listening on Port ${process.env.PORT}...`));
+
+// **********Custom middle for delays in api calls (DEV ONLY)****************
+function delay(req, res, next) {
+    setTimeout(next, 3000);
+}
