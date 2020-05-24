@@ -10,6 +10,7 @@ const users = require('./routes/users');
 const issues = require('./routes/issues');
 const librarians = require('./routes/librarians');
 const authors = require('./routes/auhtors');
+const publishers = require('./routes/publishers');
 
 const app = express();
 
@@ -50,9 +51,12 @@ app.use('/api/librarians', librarians);
 // route for handling all requests related to authors
 app.use('/api/authors', authors);
 
+// route for handling all requests related to publishers
+app.use('/api/publishers', publishers);
+
 app.listen(process.env.PORT, () => console.log(`Listening on Port ${process.env.PORT}...`));
 
 // **********Custom middle for delays in api calls (DEV ONLY)****************
 function delay(req, res, next) {
-    setTimeout(next, 3000);
+    setTimeout(next, 5000);
 }
