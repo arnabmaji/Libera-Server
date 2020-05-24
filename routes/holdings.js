@@ -19,7 +19,7 @@ router.post('/', librarianAuth, async (req, res) => {
     // add and get newly generated holding number for current book
     const holdingNumbers = await addNewHoldings(_.pick(req.body, 'book_id'), req.body.items);
 
-    res.status(200).send({holdingNumbers: holdingNumbers});  // return the newly generated holding  number
+    res.status(200).send(holdingNumbers);  // return the newly generated holding  number
 });
 
 // add route for deleting existing holdings
