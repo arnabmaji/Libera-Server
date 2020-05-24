@@ -25,13 +25,20 @@ router.post('/', async (req, res) => {
     user.password = await bcrypt.hash(user.password, salt);
     let affectedRows = await createNewUser(user);
 
-    if (affectedRows === 1) return  res.sendStatus(200);
+    if (affectedRows === 1) return res.sendStatus(200);
     res.sendStatus(500);
 });
 
 // add route for fetching all users
 router.get('/', [librarianAuth, admin], async (req, res) => {
     res.status(200).send(await getAllUsers());
+});
+
+// add route for fetching user by email
+router.get('/:email', async (req, res) => {
+    const user = await getUserByEmail(req.params.email);
+    if (user) return res.status(200).send(_.pick(user, ['user_id', 'first_name', 'last_name', 'email', 'phone', 'address']));
+    res.sendStatus(400);
 });
 
 module.exports = router;
