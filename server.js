@@ -23,7 +23,7 @@ if (!config.get('jwtPrivateKey')) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('tiny'));
-app.use(delay);
+// app.use(delay);
 
 // routes
 app.get('/', (req, res) => {
