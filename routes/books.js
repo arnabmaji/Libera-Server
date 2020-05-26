@@ -1,7 +1,13 @@
 const express = require('express');
 const _ = require('lodash');
 const librarianAuth = require('../middleware/librarian-auth');
-const {validateBooksParams, addNewBook, deleteBookById, searchBooks} = require('../models/book');
+const {
+    validateBooksParams,
+    addNewBook,
+    deleteBookById,
+    searchBooks,
+    getIssuedHoldings
+} = require('../models/book');
 
 const router = express.Router();
 
@@ -32,6 +38,11 @@ router.delete('/:bookId', librarianAuth, async (req, res) => {
 router.get('/search', librarianAuth, async (req, res) => {
     const results = await searchBooks(req.query.keyword);
     res.status(200).send(results);
+});
+
+// add route for fetching all issued holdings for a book
+router.get('/issues/:bookId', librarianAuth, async (req, res) => {
+    res.status(200).send(await getIssuedHoldings(req.params.bookId));
 });
 
 module.exports = router;

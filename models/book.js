@@ -27,9 +27,28 @@ async function searchBooks(keyword) {
         keyword);
 }
 
+async function getIssuedHoldings(bookId) {
+    /*
+    * Fetch all issued holdings for the book
+     */
+    const results = await database.query('SELECT\n' +
+        '       holding_number\n' +
+        '       FROM issue_details\n' +
+        '       JOIN holdings USING (holding_number)\n' +
+        '       WHERE submission_date IS NULL\n' +
+        '       AND book_id = ?', bookId);
+
+    let holdingNumbers = [];
+    for (const result of results)
+        holdingNumbers.push(result.holding_number);
+
+    return holdingNumbers;
+}
+
 module.exports = {
     validateBooksParams,
     addNewBook,
     deleteBookById,
-    searchBooks
+    searchBooks,
+    getIssuedHoldings
 };
