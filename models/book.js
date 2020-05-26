@@ -38,6 +38,29 @@ async function getIssuedHoldings(bookId) {
         '       WHERE submission_date IS NULL\n' +
         '       AND book_id = ?', bookId);
 
+    return parseHoldings(results);
+}
+
+async function getAvailableHoldings(bookId) {
+    /*
+    * Fetch all available holdings for a book
+     */
+
+    const results = await database.query(
+        'SELECT holding_number\n' +
+        'FROM holdings\n' +
+        'WHERE book_id = ?\n' +
+        'AND holding_number NOT IN (\n' +
+        '    SELECT\n' +
+        '       holding_number\n' +
+        '       FROM issue_details\n' +
+        '       JOIN holdings USING (holding_number)\n' +
+        '       WHERE submission_date IS NULL\n' +
+        '    );', bookId);
+    return parseHoldings(results);
+}
+
+function parseHoldings(results) {
     let holdingNumbers = [];
     for (const result of results)
         holdingNumbers.push(result.holding_number);
@@ -50,5 +73,6 @@ module.exports = {
     addNewBook,
     deleteBookById,
     searchBooks,
-    getIssuedHoldings
+    getIssuedHoldings,
+    getAvailableHoldings
 };

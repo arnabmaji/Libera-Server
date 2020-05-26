@@ -6,7 +6,8 @@ const {
     addNewBook,
     deleteBookById,
     searchBooks,
-    getIssuedHoldings
+    getIssuedHoldings,
+    getAvailableHoldings
 } = require('../models/book');
 
 const router = express.Router();
@@ -43,6 +44,11 @@ router.get('/search', librarianAuth, async (req, res) => {
 // add route for fetching all issued holdings for a book
 router.get('/issues/:bookId', librarianAuth, async (req, res) => {
     res.status(200).send(await getIssuedHoldings(req.params.bookId));
+});
+
+// add route for fetching all available holdings for a book
+router.get('/available/:bookId', librarianAuth, async (req, res) => {
+    res.status(200).send(await getAvailableHoldings(req.params.bookId));
 });
 
 module.exports = router;
