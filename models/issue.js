@@ -93,7 +93,7 @@ async function getIssuedBooksByUserId(id) {
         'SELECT\n' +
         '        holding_number,\n' +
         '        CONCAT(title, \', \', author, \', \', publisher) AS book,\n' +
-        '        due_date\n' +
+        '        DATE_FORMAT(due_date, \'%d-%m-%Y\') AS due_date\n' +
         '        FROM book_details\n' +
         '        JOIN holdings USING (book_id)\n' +
         '        JOIN issue_details USING (holding_number)\n' +
