@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 module.exports = (req, res, next, privilegeLevel) => {
+    // TODO: Enable auth middleware after testing
     next();
     // const token = req.header('x-auth-token');  // retrieve auth token from request headers
     // if (!token) return res.status(401).send('Authentication required.');

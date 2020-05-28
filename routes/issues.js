@@ -32,7 +32,7 @@ router.get('/', librarianAuth, async (req, res) => {
 });
 
 // fetch issued books for a particular user
-router.get('/:userId', librarianAuth, async (req, res) => {
+router.get('/user/:userId', librarianAuth, async (req, res) => {
     res.status(200).send(await getIssuedBooksByUserId(req.params.userId));
 });
 
