@@ -23,7 +23,7 @@ if (!config.get('jwtPrivateKey')) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('tiny'));
-// app.use(delay);
+app.use(delay);
 
 // routes
 app.get('/', (req, res) => {
@@ -58,5 +58,5 @@ app.listen(process.env.PORT, () => console.log(`Listening on Port ${process.env.
 
 // **********Custom middle for delays in api calls (DEV ONLY)****************
 function delay(req, res, next) {
-    setTimeout(next, 5000);
+    setTimeout(next, 3000);
 }

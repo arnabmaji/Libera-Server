@@ -43,7 +43,7 @@ async function getAllLibrarians() {
     /*
     * Fetch all librarians
      */
-    return await database.query('SELECT first_name, last_name, email, phone, address FROM librarians');
+    return await database.query('SELECT librarian_id, first_name, last_name, email, phone, address FROM librarians');
 }
 
 module.exports = {

@@ -41,7 +41,7 @@ async function getAllUsers() {
     /*
     * Fetch all users from database
      */
-    return await database.query('SELECT first_name, last_name, email, phone, address FROM users');
+    return await database.query('SELECT user_id, first_name, last_name, email, phone, address FROM users');
 }
 
 module.exports = {
