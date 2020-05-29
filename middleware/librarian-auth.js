@@ -1,8 +1,4 @@
-/*
-* Middleware for authentication of librarians
- */
 const auth = require('./auth');
+const Roles = require('../models/roles');
 
-module.exports = (req, res, next) => {
-    auth(req, res, next, 1);
-}
+module.exports = auth(Roles.ADMIN, Roles.LIBRARIAN);

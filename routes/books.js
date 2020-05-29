@@ -14,13 +14,18 @@ const router = express.Router();
 
 // add route for adding new books
 router.post('/', librarianAuth, async (req, res) => {
+    /*
+    * Retrieve book params from body
+    * Send error if any
+    * Proceed to add new book
+    * Send confirmation
+     */
 
     let book = _.pick(req.body, ['title', 'author_id', 'publisher_id', 'year_published']);
-    // validate book body params
+
     const {error} = validateBooksParams(book);
     if (error) return res.status(400).send(error.details[0].message);
 
-    // add new book
     let affectedRows = await addNewBook(book);
     if (affectedRows === 1) return res.sendStatus(200);
     res.sendStatus(500);
@@ -29,7 +34,7 @@ router.post('/', librarianAuth, async (req, res) => {
 // add route for deleting book by its id
 router.delete('/:bookId', librarianAuth, async (req, res) => {
 
-    let affectedRows = await deleteBookById(req.params.bookId);  // delete book by its id
+    let affectedRows = await deleteBookById(req.params.bookId);
 
     if (affectedRows === 1) return res.sendStatus(200);
     res.sendStatus(400);

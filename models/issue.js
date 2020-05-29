@@ -23,8 +23,10 @@ async function makeIssues(issue) {
     try {
         // create new issue for user
         let issueId = await createNewIssue(issue.user_id);
+
         // add all holdings for current issue
         for (const holdingNumber of issue.holding_numbers) {
+
             const alreadyIssued = await isAlreadyIssued(holdingNumber);
             if (alreadyIssued) throw new Error(`Holding ${holdingNumber} already issued!`);
             await database.query('INSERT INTO issue_details SET ?', {

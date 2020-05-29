@@ -14,17 +14,19 @@ router.get('/', librarianAuth, async (req, res) => {
 
 // add route for creating new authors
 router.post('/', librarianAuth, async (req, res) => {
+    /*
+    * Retrieve Params from body
+    * Send error if any
+    * Proceed to create new author
+     */
 
-    // retrieve author params from request body
     let author = _.pick(req.body, ['first_name', 'last_name']);
-    // validate params
+
     const {error} = validateAuthorParams(author);
     if (error) return res.status(400).send(error.details[0].message);
 
-    // create new author
     const result = await addAuthor(author);
     res.sendStatus(result ? 200 : 500);
-
 });
 
 module.exports = router;

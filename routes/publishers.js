@@ -7,6 +7,10 @@ const {getPublishers, validatePublisherParams, addPublisher} = require('../model
 
 // add route for fetching all publishers
 router.get('/', librarianAuth, async (req, res) => {
+    /*
+    * Fetch all available publisher details
+     */
+
     res
         .status(200)
         .send(await getPublishers());
@@ -14,10 +18,15 @@ router.get('/', librarianAuth, async (req, res) => {
 
 // add route for adding new publishers
 router.post('/', librarianAuth, async (req, res) => {
+    /*
+    * Retrieve Publisher params from body
+    * Validate them
+    * Send error message if any
+    * Then create new publisher
+     */
 
-    // retrieve publisher params from request body
     let publisher = _.pick(req.body, 'name');
-    // validate params
+
     const {error} = validatePublisherParams(publisher);
     if (error) return res.status(400).send(error.details[0].message);
 
