@@ -12,65 +12,67 @@ const router = express.Router();
 
 // route for authenticating librarians
 router.post('/librarian', async (req, res) => {
+    /*
+    * Retrieve Auth credentials from body
+    * Validate them, send error if any
+    * Verify auth credentials
+    * Generate Auth Token
+    * Send auth token in response header
+     */
 
-    // validate request body
     const {error} = validateAuthCredentials(_.pick(req.body, ['email', 'password']));
     if (error) return res.status(401).send(error.details[0].message);
 
-    // verify authentication details
     const librarian = await getLibrarianByEmail(req.body.email);
     if (!librarian) return res.status(400).send('Invalid email or password');
 
-    // verify password
     let valid = await bcrypt.compare(req.body.password, librarian.password);
     if (!valid) return res.status(400).send('Invalid email or password');
 
-    // set parameters to include in auth token
     let tokenParams = {
         id: librarian.librarian_id,
         email: librarian.email,
         role: librarian.is_admin ? Roles.ADMIN : Roles.LIBRARIAN
     };
-
-    // generate token
     const authToken = generateAuthToken(tokenParams);
 
     res
         .header('x-auth-token', authToken)
         .status(200)
-        .send(_.pick(librarian, ['first_name', 'last_name', 'email', 'phone', 'address']));
+        .send(_.pick(librarian, ['first_name', 'last_name', 'email']));
 
 });
 
 // add route for authenticating users
 router.post('/user', async (req, res) => {
+    /*
+    * Retrieve Auth credentials from body
+    * Validate them, send error if any
+    * Verify auth credentials
+    * Generate Auth Token
+    * Send auth token in response header
+     */
 
-    // validate request body
     const {error} = validateAuthCredentials(_.pick(req.body, ['email', 'password']));
     if (error) return res.status(400).send(error.details[0].message);
 
-    // verify authentication details
     let user = await getUserByEmail(req.body.email);
-    // if user is not found
     if (!user) return res.status(400).send('Invalid email or password.');
-    // verify password
+
     let valid = await bcrypt.compare(req.body.password, user.password);
     if (!valid) return res.status(400).send('Invalid email or password.');
 
-    // generate auth token
     let tokenParams = {
         id: user.user_id,
         email: user.email,
         role: Roles.USER
     }
-
     const authToken = generateAuthToken(tokenParams);
 
-    // send auth token with user information
     res
         .header('x-auth-token', authToken)
         .status(200)
-        .send(_.pick(user, ['first_name', 'last_name', 'email', 'phone', 'address']));
+        .send(_.pick(user, ['first_name', 'last_name', 'email']));
 
 })
 
