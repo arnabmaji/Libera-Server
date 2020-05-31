@@ -44,9 +44,27 @@ async function getAllUsers() {
     return await database.query('SELECT user_id, first_name, last_name, email, phone, address FROM users');
 }
 
+async function getReadingHistory(id) {
+    /*
+    * Fetch All Distinct Books that User have already Issued
+     */
+    return await database.query(
+        'SELECT DISTINCT book_id,\n' +
+        '                title,\n' +
+        '                author,\n' +
+        '                publisher,\n' +
+        '                year_published\n' +
+        'FROM book_details\n' +
+        '         JOIN holdings USING (book_id)\n' +
+        '         JOIN (issue_details) USING (holding_number)\n' +
+        '         JOIN issues USING (issue_id)\n' +
+        'WHERE user_id = ?', id);
+}
+
 module.exports = {
     validateUserParams,
     getUserByEmail,
     createNewUser,
-    getAllUsers
+    getAllUsers,
+    getReadingHistory
 };

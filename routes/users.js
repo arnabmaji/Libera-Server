@@ -3,7 +3,7 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const Roles = require('../models/roles');
 const auth = require('../middleware/auth');
-const {validateUserParams, getUserByEmail, createNewUser, getAllUsers} = require('../models/user');
+const {validateUserParams, getUserByEmail, createNewUser, getAllUsers, getReadingHistory} = require('../models/user');
 const {getIssuedBooksByUserId} = require('../models/issue');
 
 const router = express.Router();
@@ -68,5 +68,15 @@ router.get('/actions/issues', auth(Roles.USER), async (req, res) => {
     res.status(200).send(await getIssuedBooksByUserId(req.user.id));
 
 });
+
+// add route for fetching user's reading history
+router.get('/actions/history', auth(Roles.USER), async (req, res) => {
+    /*
+    * Fetch Reading History for authenticated User
+    * Get User Id From decoded auth token
+    * Fetch Reading History for the Use Id
+     */
+    res.status(200).send(await getReadingHistory(req.user.id));
+})
 
 module.exports = router;
