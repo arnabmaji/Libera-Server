@@ -1,5 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
+const Roles = require('../models/roles');
+const auth = require('../middleware/auth');
 const librarianAuth = require('../middleware/librarian-auth');
 const {
     validateBooksParams,
@@ -41,18 +43,18 @@ router.delete('/:bookId', librarianAuth, async (req, res) => {
 });
 
 // add route for searching book by title
-router.get('/search', librarianAuth, async (req, res) => {
+router.get('/search', auth(Roles.ADMIN, Roles.LIBRARIAN, Roles.USER), async (req, res) => {
     const results = await searchBooks(req.query.keyword);
     res.status(200).send(results);
 });
 
 // add route for fetching all issued holdings for a book
-router.get('/issues/:bookId', librarianAuth, async (req, res) => {
+router.get('/issues/:bookId', auth(Roles.ADMIN, Roles.LIBRARIAN, Roles.USER), async (req, res) => {
     res.status(200).send(await getIssuedHoldings(req.params.bookId));
 });
 
 // add route for fetching all available holdings for a book
-router.get('/available/:bookId', librarianAuth, async (req, res) => {
+router.get('/available/:bookId', auth(Roles.ADMIN, Roles.LIBRARIAN, Roles.USER), async (req, res) => {
     res.status(200).send(await getAvailableHoldings(req.params.bookId));
 });
 

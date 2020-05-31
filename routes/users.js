@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const Roles = require('../models/roles');
 const auth = require('../middleware/auth');
 const {validateUserParams, getUserByEmail, createNewUser, getAllUsers} = require('../models/user');
+const {getIssuedBooksByUserId} = require('../models/issue');
 
 const router = express.Router();
 
@@ -54,6 +55,18 @@ router.get('/:email', auth(Roles.ADMIN), async (req, res) => {
     const user = await getUserByEmail(req.params.email);
     if (user) return res.status(200).send(_.pick(user, ['user_id', 'first_name', 'last_name', 'email', 'phone', 'address']));
     res.sendStatus(400);
+});
+
+// add route for fetching issued books for user
+router.get('/actions/issues', auth(Roles.USER), async (req, res) => {
+    /*
+    * Fetch Issued Books for the User
+    * Action Performed by User
+    * Get User Id from Decoded Auth Token
+    * Send Issued Books for the User Id
+     */
+    res.status(200).send(await getIssuedBooksByUserId(req.user.id));
+
 });
 
 module.exports = router;
